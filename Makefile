@@ -1,24 +1,27 @@
 SHELL := /bin/bash
+.PHONY: help build pull up stop restart destroy
 .DEFAULT_GOAL := help
 
 include .env
 
-.PHONY: up
-up: 		## deploy services
-	bin/compose up -d --remove-orphans
-
-.PHONY: stop
-stop: 		## stop services
-	bin/compose stop
-
-.PHONY: restart
-restart: 	## restart services
-	bin/compose restart
-
-.PHONY: shell
-shell: up	## login to the app container
-	bin/compose exec app bash
-
-.PHONY: help
-help:		## displays this help message
+help:			## This help message
 	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
+
+build: 			## Build services
+	docker-compose build
+
+pull: 			## Pull services
+	docker-compose pull
+
+up: 			## Deploy services
+	docker-compose up -d --remove-orphans
+
+stop: 			## Stop services
+	docker-compose stop
+
+restart: 		## Restart services
+	docker-compose restart
+
+.PHONY: destroy
+destroy:    	## Remove services
+	docker-compose down --remove-orphans
