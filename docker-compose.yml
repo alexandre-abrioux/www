@@ -10,7 +10,7 @@ services:
   app:
     container_name: ${COMPOSE_PROJECT_NAME}_app
     image: schmunk42/nginx-redirect:1.0.0-rc1
-    restart: ${COMPOSE_RESTART}
+    restart: always
     environment:
       SERVER_REDIRECT: github.com/alexandre-abrioux
       SERVER_REDIRECT_CODE: 302
@@ -23,4 +23,5 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.entrypoints=web"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.rule=Host(`${HOST}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.tls.certResolver=resolver-http"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=80"
